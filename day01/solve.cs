@@ -50,6 +50,27 @@ class Program
         Console.WriteLine($"The password is {zeroes} for part 1");
     }
 
+    static void UghhhhhPart2(string path, bool debug = false)
+    {
+        int position = 50;
+        int zeroes = 0;
+
+        if (debug) Console.WriteLine($"The dial starts by pointing at {position}");
+        List<Rotation> rotations = ReadFile(path);
+        foreach (Rotation rotation in rotations)
+        {
+            for (var i = 0; i < rotation.value; i++)
+            {
+                position += rotation.direction == 'L' ? -1 : 1;
+                while (position < 0) position += 100;
+                position %= 100;
+                if (position == 0) zeroes++;
+            }
+        }
+
+        Console.WriteLine($"The password is {zeroes} for part 2");
+    }
+
     static void Part2(string path, bool debug = false)
     {
         int position = 50;
@@ -84,6 +105,6 @@ class Program
 
     static void Main()
     {
-        Part2("input.txt", true);
+        UghhhhhPart2("input.txt", true);
     }
 }
