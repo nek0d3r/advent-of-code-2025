@@ -44,8 +44,53 @@ class Program
         Console.WriteLine($"The total joltage output for part 1 is {totalJoltage}");
     }
 
+    static List<string> GetDigitCombos()
+    {
+        var combos = new List<string>();
+        var mask = 0b000111111111111;
+
+        while (mask <= 0b111111111111000)
+        {
+            var combo = Convert.ToString(mask, toBase: 2);
+            while (combo.Length < 15) combo = "0" + combo;
+
+            var zeroes = 0;
+            foreach (char c in combo) if (c == '0') zeroes++;
+            if (zeroes == 3) combos.Add(combo);
+            mask++;
+        }
+
+        return combos;
+    }
+
+    static void Part2(string path, bool debug = false)
+    {
+        long totalJoltage = 0;
+        List<string> banks = ReadFile(path);
+        List<string> digitCombos = GetDigitCombos();
+
+        foreach (string bank in banks)
+        {
+            char[] batteries = bank.ToCharArray();
+            long joltage = 0;
+
+            foreach (string digitCombo in digitCombos)
+            {
+                var combo = "";
+                for (var i = 0; i < digitCombo.Length; i++)
+                    combo += digitCombo[i] == '1' ? batteries[i] : "";
+
+                joltage = Math.Max(joltage, Convert.ToInt64(combo));
+            }
+
+            totalJoltage += joltage;
+        }
+
+        Console.WriteLine($"The total joltage output for part 2 is {totalJoltage}");
+    }
+
     static void Main()
     {
-        Part1("input.txt", true);
+        Part2("input.txt", true);
     }
 }
