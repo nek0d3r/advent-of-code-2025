@@ -15,18 +15,44 @@ class Program
 
     static void Part1(string path, bool debug = false)
     {
-        var joltage = 0;
+        var totalJoltage = 0;
         List<string> banks = ReadFile(path);
 
         foreach (string bank in banks)
         {
             char[] batteries = bank.ToCharArray();
-            Array.Sort(batteries);
-            Array.Reverse(batteries);
-            joltage += Convert.ToInt32($"{batteries[0]}{batteries[1]}");
+            int highIndex1 = 0, highIndex2 = 0;
+            int highest1 = 0, highest2 = 0;
+
+            for (var i = 0; i < batteries.Count(); i++)
+            {
+                var battery = Convert.ToInt32(new String(batteries[i], 1));
+                if (battery > highest1)
+                {
+                    highIndex1 = i;
+                    highest1 = battery;
+                }
+            }
+
+            for (var i = 0; i < batteries.Count(); i++)
+            {
+                if (i == highIndex1) continue;
+
+                var battery = Convert.ToInt32(new String(batteries[i], 1));
+                if (battery > highest2)
+                {
+                    highIndex2 = i;
+                    highest2 = battery;
+                }
+            }
+
+            int joltage = highIndex2 > highIndex1 ? Convert.ToInt32($"{highest1}{highest2}") : Convert.ToInt32($"{highest2}{highest1}");
+            totalJoltage += joltage;
+
+            if (debug) Console.WriteLine($"Bank joltage is {joltage}");
         }
 
-        Console.WriteLine($"The total joltage output for part 1 is {joltage}");
+        Console.WriteLine($"The total joltage output for part 1 is {totalJoltage}");
     }
 
     static void Main()
