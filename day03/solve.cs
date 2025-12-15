@@ -21,35 +21,24 @@ class Program
         foreach (string bank in banks)
         {
             char[] batteries = bank.ToCharArray();
-            int highIndex1 = 0, highIndex2 = 0;
-            int highest1 = 0, highest2 = 0;
+            int joltage = 0;
 
-            for (var i = 0; i < batteries.Count(); i++)
+            for (var i = 0; i < batteries.Count() - 1; i++)
             {
-                var battery = Convert.ToInt32(new String(batteries[i], 1));
-                if (battery > highest1)
+                var battery1 = Convert.ToInt32(new String(batteries[i], 1));
+
+                for (var j = i + 1; j < batteries.Count(); j++)
                 {
-                    highIndex1 = i;
-                    highest1 = battery;
+                    var battery2 = Convert.ToInt32(new String(batteries[j], 1));
+                    var pair = Convert.ToInt32($"{battery1}{battery2}");
+
+                    joltage = pair > joltage ? pair : joltage;
                 }
             }
-
-            for (var i = 0; i < batteries.Count(); i++)
-            {
-                if (i == highIndex1) continue;
-
-                var battery = Convert.ToInt32(new String(batteries[i], 1));
-                if (battery > highest2)
-                {
-                    highIndex2 = i;
-                    highest2 = battery;
-                }
-            }
-
-            int joltage = highIndex2 > highIndex1 ? Convert.ToInt32($"{highest1}{highest2}") : Convert.ToInt32($"{highest2}{highest1}");
-            totalJoltage += joltage;
 
             if (debug) Console.WriteLine($"Bank joltage is {joltage}");
+
+            totalJoltage += joltage;
         }
 
         Console.WriteLine($"The total joltage output for part 1 is {totalJoltage}");
@@ -57,6 +46,6 @@ class Program
 
     static void Main()
     {
-        Part1("example.txt", true);
+        Part1("input.txt", true);
     }
 }
